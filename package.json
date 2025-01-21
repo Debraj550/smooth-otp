@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://https://github.com/Debraj550/smooth-otp"
+    "url": "https://github.com/Debraj550/smooth-otp"
   },
   "scripts": {
     "build": "rollup -c",
