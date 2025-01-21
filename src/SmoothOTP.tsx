@@ -59,13 +59,40 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
     }
   };
 
+  const handlePaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const pastedData = e.clipboardData.getData("Text").replace(/\D/g, "");
+    const newOtp = [...otp];
+
+    if (type === "slots") {
+      for (let i = 0; i < pastedData.length && i < length; i++) {
+        newOtp[i] = pastedData[i];
+      }
+    } else {
+      newOtp.fill("");
+      newOtp[0] = pastedData;
+    }
+    setOtp(newOtp);
+    if (type === "slots" && index < length - 1) {
+      inputRefs.current[index + pastedData.length]?.focus();
+    }
+
+    if (newOtp.every((v) => v !== "")) {
+      onComplete(newOtp.join(""));
+    }
+
+    e.preventDefault();
+  };
+
   const renderInputs = () => {
     if (type === "slots") {
       return otp.map((digit, index) => (
         <input
           key={index}
           ref={(el) => (inputRefs.current[index] = el)}
-          className={`w-12 h-12 text-center text-xl border-2 border-gray-300 rounded-md focus:border-blue-500 focus:outline-none ${inputClassName}`}
+          className={`w-12 h-12 text-center text-xl border-2 border-gray-400 rounded-md focus:border-gray-500 focus:outline-none ${inputClassName}`}
           type="text"
           inputMode="numeric"
           autoComplete="one-time-code"
@@ -74,6 +101,7 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
           value={digit}
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
+          onPaste={(e) => handlePaste(e, index)}
         />
       ));
     } else {
@@ -88,6 +116,7 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
           maxLength={length}
           value={otp.join("")}
           onChange={(e) => handleChange(e, 0)}
+          onPaste={(e) => handlePaste(e, 0)}
         />
       );
     }
