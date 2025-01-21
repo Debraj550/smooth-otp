@@ -5,6 +5,10 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://https://github.com/Debraj550/smooth-otp"
+  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
