@@ -19,6 +19,15 @@
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
+  "keywords": [
+    "react otp",
+    "nextjs otp",
+    "react otp input",
+    "smooth-otp",
+    "smooth-otp-input",
+    "react-otp-input",
+    "next-otp-input"
+  ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
