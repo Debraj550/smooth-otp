@@ -1,6 +1,6 @@
 {
   "name": "smooth-otp",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "description": "A fast and small OTP input component for React/Nextjs - Debraj",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
