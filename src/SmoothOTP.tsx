@@ -4,11 +4,12 @@ import "./styles.css";
 export interface SmoothOTPProps {
   length?: number;
   onComplete: (otp: string) => void;
-  type?: "slots" | "single-field" | "separated";
+  type?: "slots" | "single-field";
   className?: string;
   inputClassName?: string;
   spacing?: number | string;
   separator?: string;
+  separatorClassName?: string;
 }
 
 export const SmoothOTP: React.FC<SmoothOTPProps> = ({
@@ -19,6 +20,7 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
   inputClassName = "",
   spacing = 2,
   separator = "-",
+  separatorClassName = "text-black",
 }) => {
   const [otp, setOtp] = useState<string[]>(Array(length).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -43,18 +45,14 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
     if (isNaN(Number(value))) return;
 
     const newOtp = [...otp];
-    if (type === "slots" || type === "separated") {
+    if (type === "slots") {
       newOtp[index] = value.substring(value.length - 1);
     } else {
       newOtp[index] = value;
     }
     setOtp(newOtp);
 
-    if (
-      (type === "slots" || type === "separated") &&
-      value &&
-      index < length - 1
-    ) {
+    if (type === "slots" && value && index < length - 1) {
       setInputFocus(index + 1);
     }
 
@@ -80,7 +78,7 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
     const pastedData = e.clipboardData.getData("Text").replace(/\D/g, "");
     const newOtp = [...otp];
 
-    if (type === "slots" || type === "separated") {
+    if (type === "slots") {
       for (let i = 0; i < pastedData.length && i < length; i++) {
         newOtp[i] = pastedData[i];
       }
@@ -121,63 +119,12 @@ export const SmoothOTP: React.FC<SmoothOTPProps> = ({
             required
           />
           {index < length - 1 && separator && (
-            <span className="mx-1" aria-hidden="true">
+            <span className={`mx-1 ${separatorClassName}`} aria-hidden="true">
               {separator}
             </span>
           )}
         </React.Fragment>
       ));
-    } else if (type === "separated") {
-      const halfLength = Math.ceil(length / 2);
-      return (
-        <>
-          <input
-            ref={(el) => (inputRefs.current[0] = el)}
-            className={`w-24 h-12 text-center text-xl border-2 border-gray-300 rounded-md focus:border-blue-500 focus:outline-none ${inputClassName}`}
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern={`\\d{${halfLength}}`}
-            maxLength={halfLength}
-            value={otp.slice(0, halfLength).join("")}
-            onChange={(e) => handleChange(e, 0)}
-            onKeyDown={(e) => handleKeyDown(e, 0)}
-            onPaste={(e) => handlePaste(e, 0)}
-            aria-label={`First ${halfLength} digits of ${length}-digit code`}
-            aria-invalid={
-              otp.slice(0, halfLength).join("").length !== halfLength
-                ? "true"
-                : "false"
-            }
-            required
-          />
-          <span className="mx-2" aria-hidden="true">
-            {separator}
-          </span>
-          <input
-            ref={(el) => (inputRefs.current[1] = el)}
-            className={`w-24 h-12 text-center text-xl border-2 border-gray-300 rounded-md focus:border-blue-500 focus:outline-none ${inputClassName}`}
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern={`\\d{${length - halfLength}}`}
-            maxLength={length - halfLength}
-            value={otp.slice(halfLength).join("")}
-            onChange={(e) => handleChange(e, 1)}
-            onKeyDown={(e) => handleKeyDown(e, 1)}
-            onPaste={(e) => handlePaste(e, 1)}
-            aria-label={`Last ${
-              length - halfLength
-            } digits of ${length}-digit code`}
-            aria-invalid={
-              otp.slice(halfLength).join("").length !== length - halfLength
-                ? "true"
-                : "false"
-            }
-            required
-          />
-        </>
-      );
     } else {
       return (
         <input
